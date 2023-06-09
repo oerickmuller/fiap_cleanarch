@@ -1,4 +1,6 @@
-export type SqlParameter = {
-    field: string,
-    value: any
-}; 
+type SqlParameter = {
+  field: string;
+  value: any;
+};
+
+export { SqlParameter };

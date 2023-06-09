@@ -1,29 +1,29 @@
-import { Disciplina, Estudante, Matricula } from "@/entities";
+import { Disciplina } from "@entities/disciplina";
+import { Estudante } from "@entities/estudante";
+import { Matricula } from "@entities/matricula";
 
 interface DisciplinaGatewayInterface {
-    BuscarDisciplina(nome: string): Disciplina; 
-    IncluirDisciplina(nome: string): boolean;
+  BuscarDisciplina(nome: string): Disciplina | null;
+  BuscarTodasDisciplinas(): Disciplina[] | null;
+  IncluirDisciplina(nome: string): boolean;
 }
 
 interface MatriculaGatewayInterface {
-    BuscarMatricula(
-        estudante: Estudante,
-        disciplina: Disciplina
-    ): Matricula;
-    IncluirMatricula(
-        estudante: Estudante,
-        disciplina: Disciplina
-    ): boolean;
+  BuscarMatricula(
+    estudante: Estudante,
+    disciplina: Disciplina
+  ): Matricula | null;
+
+  IncluirMatricula(estudante: Estudante, disciplina: Disciplina): boolean;
 }
 
 interface EstudanteGatewayInterface {
-    BuscarEstudante( nome: string ): Estudante;
-    IncluirEstudante( nome: string ): boolean;
+  BuscarEstudante(nome: string): Estudante | null;
+  IncluirEstudante(nome: string): boolean;
 }
 
-
-export { 
-    DisciplinaGatewayInterface , 
-    EstudanteGatewayInterface, 
-    MatriculaGatewayInterface
+export {
+  DisciplinaGatewayInterface,
+  EstudanteGatewayInterface,
+  MatriculaGatewayInterface,
 };
