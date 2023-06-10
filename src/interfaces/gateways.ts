@@ -4,7 +4,7 @@ import { Matricula } from "@entities/matricula";
 
 interface DisciplinaGatewayInterface {
   BuscarDisciplina(nome: string): Disciplina | null;
-  BuscarTodasDisciplinas(): Disciplina[] | null;
+  BuscarTodasDisciplinas(): Promise<Disciplina[] | null>;
   IncluirDisciplina(nome: string): boolean;
 }
 

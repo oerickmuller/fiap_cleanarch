@@ -5,7 +5,7 @@ export interface DbConnection {
     tableName: string,
     fields?: string[],
     parameters?: SqlParameter[]
-  ): any[];
+  ): Promise<any>;
 
-  RunSelectAllQuery(tableName: string, fields: string[] | null): any[];
+  RunSelectAllQuery(tableName: string, fields: string[] | null): Promise<any[]>;
 }

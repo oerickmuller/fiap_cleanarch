@@ -1,13 +1,13 @@
 import { Disciplina } from "@entities/disciplina";
-import { DisciplinaGateway } from "src/gateways/disciplina";
 import { DbConnection } from "@interfaces/dbconnection";
 import { DisciplinaGatewayInterface } from "@interfaces/gateways";
 
 export class DisciplinaUseCases {
-  static ObterTodasDisciplinas(
+  static async ObterTodasDisciplinas(
     disciplinasGateway: DisciplinaGatewayInterface
-  ): Disciplina[] | null {
-    const todasAsDisciplinas = disciplinasGateway.BuscarTodasDisciplinas();
+  ): Promise<Disciplina[] | null> {
+    const todasAsDisciplinas =
+      await disciplinasGateway.BuscarTodasDisciplinas();
     return todasAsDisciplinas;
   }
 

@@ -35,11 +35,11 @@ export class FaculdadeApp {
     //      */
     // })
 
-    app.get("/disciplina", (req: Request, res: Response) => {
-      const disciplinas = DisciplinaController.ObterTodasDisciplinas(
+    app.get("/disciplina", async (req: Request, res: Response) => {
+      const disciplinas = await DisciplinaController.ObterTodasDisciplinas(
         this._dbconnection
       );
-      res.send(JSON.stringify(disciplinas));
+      res.send(disciplinas);
     });
 
     // app.post('/disciplina', (req, res) => {

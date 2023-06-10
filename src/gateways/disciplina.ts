@@ -11,28 +11,21 @@ export class DisciplinaGateway implements DisciplinaGatewayInterface {
   }
 
   public BuscarDisciplina(nome: string): Disciplina | null {
-    // const result = this.connection.RunSelectQuery(
-    //     this.tableName,
-    //     null,
-    //     [{field: 'nome', value: nome}]
-    // );
-    // if ( result != null ) {
-    //     return new Disciplina(result[0].nome);
-    // }
-    // return null;
-
     return null;
   }
 
-  public BuscarTodasDisciplinas(): Disciplina[] | null {
-    const result = this.connection.RunSelectAllQuery(this.tableName, null);
+  public async BuscarTodasDisciplinas(): Promise<Disciplina[] | null> {
+    const result = await this.connection.RunSelectAllQuery(
+      this.tableName,
+      null
+    );
 
     if (result === null) {
       return null;
     } else {
       const returnData: Disciplina[] = [];
-      result.forEach((element) => {
-        returnData.push(new Disciplina(element[0], element[1]));
+      result.forEach((element: any) => {
+        returnData.push(new Disciplina(element.disciplina_id, element.nome));
       });
       return returnData;
     }

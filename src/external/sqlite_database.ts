@@ -1,20 +1,25 @@
 import { DbConnection } from "@interfaces/dbconnection";
 import { SqlParameter } from "src/types/sqlparameter";
-import { Database } from "sqlite3";
+import { open } from "sqlite";
+
+const sqlite3 = require("sqlite3").verbose();
 
 export class SqliteConnection implements DbConnection {
-  private _connection: Database;
+  private _dsn: string;
 
   constructor(dsn: string) {
-    this._connection = new Database(dsn, (err) => {
-      if (err) {
-        console.error(err.message);
-      }
-      console.log("conectado ao banco de dados");
-    });
+    this._dsn = dsn;
   }
 
-  RunSelectAllQuery(tableName: string, fields: string[] | null): any[] {
+  private openDatabase() {
+    return open({ filename: this._dsn, driver: sqlite3.Database });
+  }
+
+  async RunSelectAllQuery(
+    tableName: string,
+    fields: string[] | null
+  ): Promise<any[]> {
+    // tratar os campos
     let fieldsExpression: string;
     if (fields !== null) {
       fieldsExpression = fields.join(", ");
@@ -22,59 +27,19 @@ export class SqliteConnection implements DbConnection {
       fieldsExpression = " * ";
     }
 
+    // construir o comando sql
     const sql = `SELECT ${fieldsExpression} FROM ${tableName} `;
-    console.log(sql);
-
-    this._connection.all(sql, [], (err, rows) => {
-      if (err) {
-        throw new Error(err.message);
-      }
-      console.log(rows);
-      return rows;
-    });
-
-    return [];
+    const connection = await this.openDatabase();
+    const rows = await connection.all(sql, []);
+    connection.close();
+    return rows;
   }
 
-  RunSelectQuery(
+  async RunSelectQuery(
     tableName: string,
     fields: string[],
     parameters: SqlParameter[]
-  ): any {
-    const sqlcommand = ["select "];
-
-    if (fields === null || (fields !== null && fields?.length == 0)) {
-      sqlcommand.push("id, nome"); // os campos da tabela.
-    } else {
-      sqlcommand.push(fields.join(", "));
-    }
-
-    sqlcommand.push(` from ${tableName} `);
-
-    const query_values: any[] = [];
-
-    if (parameters.length > 0) {
-      const fieldNames: string[] = [];
-      parameters.forEach((element) => {
-        fieldNames.push(`${element.field} = ?`);
-        query_values.push(element.value);
-      });
-      sqlcommand.push(" where ");
-      sqlcommand.push(fieldNames.join(" and "));
-    }
-
-    const fullSqlCommand: string = sqlcommand.join("");
-    console.log(fullSqlCommand);
-
-    this._connection.get(
-      sqlcommand.join(""),
-      query_values.length == 0 ? null : query_values,
-      (_err, row) => {
-        console.log(_err);
-
-        console.log(row);
-        return row;
-      }
-    );
+  ): Promise<any> {
+    return null;
   }
 }
