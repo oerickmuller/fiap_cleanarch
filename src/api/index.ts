@@ -17,24 +17,28 @@ export class FaculdadeApp {
 
   start() {
     const express = require("express");
+    const bodyParser = require("body-parser");
+
     const app = express();
+    app.use(bodyParser.json());
     const port = 3000;
 
     app.get("/estudante", async (req: Request, res: Response) => {
+      res.setHeader("Content-type", "application/json");
       const estudantes = await EstudanteController.ObterTodosEstudantes(
         this._dbconnection
       );
       res.send(estudantes);
     });
 
-    // app.post('/estudante', (req, res) => {
-    //     /**
-    //      * Fornecendo um nome, criar um objeto estudante com este nome
-    //      * se ainda não existir um com esse nome;
-    //      */
-    // })
+    app.post("/estudante", (req: Request, res: Response) => {
+      const nomeEstudante: string = req.body.nome;
+
+      const success = await EstudanteController.IncluirEstudante(nomeEstudante);
+    });
 
     app.get("/disciplina", async (req: Request, res: Response) => {
+      res.setHeader("Content-type", "application/json");
       const disciplinas = await DisciplinaController.ObterTodasDisciplinas(
         this._dbconnection
       );

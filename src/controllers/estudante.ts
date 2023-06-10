@@ -16,7 +16,7 @@ export class EstudanteController {
       EstudanteAdapter.adaptJsonTodosEstudantes(todosOsEstudantes);
     return adapted;
   }
-  static CriarEstudante(nome: string, dbconnection: DbConnection) {
+  static async IncluirEstudante(nome: string, dbconnection: DbConnection) {
     const gateway = new EstudanteGateway(dbconnection);
     const estudante = EstudanteUseCases.NovoEstudante(nome, gateway);
     gateway.IncluirEstudante(nome);
