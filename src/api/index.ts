@@ -20,13 +20,12 @@ export class FaculdadeApp {
     const app = express();
     const port = 3000;
 
-    // app.get('/estudante', (req, res) => {
-    //   /**
-    //    * Lista todos os dados de estudantes registrados
-    //    */
-    // //   const estudantes = EstudanteController.ObterTodosEstudantes();
-    // //   res.send(JSON.stringify(estudantes));
-    // });
+    app.get("/estudante", async (req: Request, res: Response) => {
+      const estudantes = await EstudanteController.ObterTodosEstudantes(
+        this._dbconnection
+      );
+      res.send(estudantes);
+    });
 
     // app.post('/estudante', (req, res) => {
     //     /**

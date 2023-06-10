@@ -1,10 +1,20 @@
 import { EstudanteGateway } from "@gateways/estudante";
 import { DbConnection } from "@interfaces/dbconnection";
 import { EstudanteUseCases } from "@usecases";
+import { EstudanteAdapter } from "@adapters";
 
 export class EstudanteController {
-  static ObterTodosEstudantes() {
-    throw new Error("Method not implemented.");
+  static async ObterTodosEstudantes(
+    dbconnection: DbConnection
+  ): Promise<string> {
+    const estudantesGateway = new EstudanteGateway(dbconnection);
+    const todosOsEstudantes = await EstudanteUseCases.ObterTodosEstudantes(
+      estudantesGateway
+    );
+
+    const adapted =
+      EstudanteAdapter.adaptJsonTodosEstudantes(todosOsEstudantes);
+    return adapted;
   }
   static CriarEstudante(nome: string, dbconnection: DbConnection) {
     const gateway = new EstudanteGateway(dbconnection);

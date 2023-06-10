@@ -19,7 +19,8 @@
       "@external/*": ["./src/external/*"],
       "@types/*": ["./src/types/"],
       "@gateways/*": ["./src/gateways/"],
-      "@entities": ["./src/entities/index.ts"]
+      "@entities": ["./src/entities/index.ts"],
+      "@adapters": ["./src/adapters/index.ts"]
     }
   },
   "include": ["src/**/*"]

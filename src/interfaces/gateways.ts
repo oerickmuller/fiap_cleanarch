@@ -19,6 +19,7 @@ interface MatriculaGatewayInterface {
 
 interface EstudanteGatewayInterface {
   BuscarEstudante(nome: string): Estudante | null;
+  BuscarTodosEstudantes(): Promise<Estudante[] | null>;
   IncluirEstudante(nome: string): boolean;
 }
 

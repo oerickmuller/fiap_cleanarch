@@ -32,7 +32,6 @@ export class DisciplinaGateway implements DisciplinaGatewayInterface {
   }
 
   public IncluirDisciplina(nome: string): boolean {
-    /** ... */
     return true;
   }
 }
