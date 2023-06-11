@@ -9,18 +9,14 @@ interface DisciplinaGatewayInterface {
 }
 
 interface MatriculaGatewayInterface {
-  BuscarMatricula(
-    estudante: Estudante,
-    disciplina: Disciplina
-  ): Matricula | null;
-
+  BuscarMatricula( estudante: Estudante, disciplina: Disciplina ): Matricula | null;
   IncluirMatricula(estudante: Estudante, disciplina: Disciplina): boolean;
 }
 
 interface EstudanteGatewayInterface {
-  BuscarEstudante(nome: string): Estudante | null;
+  BuscarEstudantePorNome(nome: string): Promise<Estudante | null>;
   BuscarTodosEstudantes(): Promise<Estudante[] | null>;
-  IncluirEstudante(nome: string): boolean;
+  IncluirEstudante(estudante: Estudante): Promise<boolean>;
 }
 
 export {

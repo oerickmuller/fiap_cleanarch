@@ -31,10 +31,21 @@ export class FaculdadeApp {
       res.send(estudantes);
     });
 
-    app.post("/estudante", (req: Request, res: Response) => {
+    app.post("/estudante", async (req: Request, res: Response) => {
       const nomeEstudante: string = req.body.nome;
 
-      const success = await EstudanteController.IncluirEstudante(nomeEstudante);
+      await EstudanteController.IncluirEstudante(
+        nomeEstudante,
+        this._dbconnection
+      )
+        .then((r) => {
+          res
+            .status(201)
+            .send({ success: true, message: "Registrado com sucesso!" });
+        })
+        .catch((err) => {
+          res.status(400).send({ success: false, message: err });
+        });
     });
 
     app.get("/disciplina", async (req: Request, res: Response) => {

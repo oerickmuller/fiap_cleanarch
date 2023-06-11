@@ -18,6 +18,7 @@
       "@entities/*": ["./src/entities/*"],
       "@external/*": ["./src/external/*"],
       "@types/*": ["./src/types/"],
+      "@types": ["./src/types/index.ts"],
       "@gateways/*": ["./src/gateways/"],
       "@entities": ["./src/entities/index.ts"],
       "@adapters": ["./src/adapters/index.ts"]

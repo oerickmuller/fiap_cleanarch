@@ -1,11 +1,21 @@
-import { SqlParameter } from "src/types/sqlparameter";
+import { ParametroBusca } from "@types";
 
 export interface DbConnection {
-  RunSelectQuery(
-    tableName: string,
-    fields?: string[],
-    parameters?: SqlParameter[]
+  BuscarLinhasPorParametros(
+    nomeTabela: string,
+    campos: string[] | null,
+    parametros: ParametroBusca[]
   ): Promise<any>;
 
-  RunSelectAllQuery(tableName: string, fields: string[] | null): Promise<any[]>;
+  BuscarTodasLinhas(
+    nomeTabela: string, 
+    campos?: string[] | null
+  ): Promise<any[]>;
+
+  InserirLinha(
+    nomeTabela: string, 
+    parametros: ParametroBusca[]
+  ): Promise<boolean>;
+
+  ObterUltimoId(nomeTabela: string): Promise<number>;
 }

@@ -15,7 +15,7 @@ export class DisciplinaGateway implements DisciplinaGatewayInterface {
   }
 
   public async BuscarTodasDisciplinas(): Promise<Disciplina[] | null> {
-    const result = await this.connection.RunSelectAllQuery(
+    const result = await this.connection.BuscarTodasLinhas(
       this.tableName,
       null
     );
