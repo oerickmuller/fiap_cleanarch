@@ -48,6 +48,23 @@ export class FaculdadeApp {
         });
     });
 
+    app.post("/disciplina", async (req: Request, res: Response) => {
+      const nomeDisciplina: string = req.body.nome;
+
+      await DisciplinaController.IncluirDisciplina(
+        nomeDisciplina,
+        this._dbconnection
+      )
+        .then(() => {
+          res
+            .status(201)
+            .send({ success: true, message: "Registrado com sucesso!" });
+        })
+        .catch((err) => {
+          res.status(400).send({ success: false, message: err });
+        });
+    });
+
     app.get("/disciplina", async (req: Request, res: Response) => {
       res.setHeader("Content-type", "application/json");
       const disciplinas = await DisciplinaController.ObterTodasDisciplinas(

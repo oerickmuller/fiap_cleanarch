@@ -1,22 +1,45 @@
 import { Disciplina } from "@entities/disciplina";
 import { DbConnection } from "@interfaces/dbconnection";
 import { DisciplinaGatewayInterface } from "@interfaces/gateways";
+import { ParametroBusca } from "@types";
 
 export class DisciplinaGateway implements DisciplinaGatewayInterface {
-  private connection: DbConnection;
-  private tableName = "disciplinas";
+  private repositorioDados: DbConnection;
+  private nomeTabela = "disciplinas";
 
-  constructor(database: DbConnection) {
-    this.connection = database;
+  constructor(conexao: DbConnection) {
+    this.repositorioDados = conexao;
   }
 
-  public BuscarDisciplina(nome: string): Disciplina | null {
-    return null;
+  public async BuscarDisciplinaPorNome(
+    nome: string
+  ): Promise<Disciplina | null> {
+    const retornoBD = await this.repositorioDados.BuscarLinhasPorParametros(
+      this.nomeTabela,
+      null,
+      [{ campo: "nome", valor: nome }]
+    );
+
+    if (retornoBD === null || retornoBD === undefined) {
+      return null;
+    }
+
+    if (retornoBD.length < 1) {
+      return null;
+    }
+
+    const linhaRetorno = retornoBD[0];
+    const disciplina = new Disciplina(
+      linhaRetorno.disciplina_id,
+      linhaRetorno.nome
+    );
+
+    return disciplina;
   }
 
   public async BuscarTodasDisciplinas(): Promise<Disciplina[] | null> {
-    const result = await this.connection.BuscarTodasLinhas(
-      this.tableName,
+    const result = await this.repositorioDados.BuscarTodasLinhas(
+      this.nomeTabela,
       null
     );
 
@@ -31,7 +54,16 @@ export class DisciplinaGateway implements DisciplinaGatewayInterface {
     }
   }
 
-  public IncluirDisciplina(nome: string): boolean {
-    return true;
+  public async IncluirDisciplina(disciplina: Disciplina): Promise<void> {
+    const novoId = await this.repositorioDados.ObterUltimoId(this.nomeTabela);
+
+    const parametros: ParametroBusca[] = [];
+    parametros.push({ campo: "disciplina_id", valor: novoId });
+    parametros.push({ campo: "nome", valor: disciplina.nome });
+
+    const sucesso = await this.repositorioDados.InserirLinha(
+      this.nomeTabela,
+      parametros
+    );
   }
 }

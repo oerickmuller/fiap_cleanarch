@@ -1,7 +1,7 @@
 import { Estudante } from "@entities";
 import { DbConnection } from "@interfaces/dbconnection";
 import { EstudanteGatewayInterface } from "@interfaces/gateways";
-import { Erro, ParametroBusca } from "@types";
+import { ParametroBusca } from "@types";
 
 export class EstudanteGateway implements EstudanteGatewayInterface {
   private repositorioDados: DbConnection;

@@ -2,7 +2,6 @@ import { EstudanteGateway } from "@gateways/estudante";
 import { DbConnection } from "@interfaces/dbconnection";
 import { EstudanteUseCases } from "@usecases";
 import { EstudanteAdapter } from "@adapters";
-import { Erro } from "@types";
 
 export class EstudanteController {
   static async ObterTodosEstudantes(

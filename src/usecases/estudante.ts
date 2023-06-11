@@ -1,6 +1,5 @@
 import { Estudante } from "@entities/estudante";
 import { EstudanteGatewayInterface } from "@interfaces/gateways";
-import { Erro } from "@types";
 
 class EstudanteUseCases {
   static async ObterTodosEstudantes(

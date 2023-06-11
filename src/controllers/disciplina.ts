@@ -7,9 +7,9 @@ export class DisciplinaController {
   static async ObterTodasDisciplinas(
     dbconnection: DbConnection
   ): Promise<string> {
-    const disciplinasGateway = new DisciplinaGateway(dbconnection);
+    const disciplinaGateway = new DisciplinaGateway(dbconnection);
     const todasAsDisciplinas = await DisciplinaUseCases.ObterTodasDisciplinas(
-      disciplinasGateway
+      disciplinaGateway
     ); // vai retornar Disciplina[]
 
     const adapted =
@@ -17,10 +17,16 @@ export class DisciplinaController {
     return adapted;
   }
 
-  static CriarDisciplina(nome: string, dbconnection: DbConnection) {
-    // const gateway = new DisciplinaGateway(dbconnection);
-    // const disciplina = DisciplinaUseCases.NovaDisciplina(nome, gateway);
-    // gateway.IncluirDisciplina(nome);
-    // return {success: true};
+  static async IncluirDisciplina(
+    nome: string,
+    dbconnection: DbConnection
+  ): Promise<void> {
+    const disciplinaGateway = new DisciplinaGateway(dbconnection);
+    const disciplina = await DisciplinaUseCases.IncluirDisciplina(
+      nome,
+      disciplinaGateway
+    ).catch((err) => {
+      return Promise.reject(err);
+    });
   }
 }
