@@ -1,6 +1,7 @@
 import { Disciplina } from "@entities/disciplina";
 import { Estudante } from "@entities/estudante";
 import { Matricula } from "@entities/matricula";
+import { MatriculaDados } from "src/gateways";
 
 interface DisciplinaGatewayInterface {
   BuscarPorId(id: number): Promise<Disciplina | null>;
@@ -14,7 +15,9 @@ interface MatriculaGatewayInterface {
     estudante: Estudante,
     disciplina: Disciplina
   ): Promise<Matricula | null>;
-  IncluirMatricula(matricula: Matricula): Promise<void>;
+  Incluir(matricula: Matricula): Promise<void>;
+  BuscarPorEstudante(estudante: Estudante): Promise<MatriculaDados[]>;
+  BuscarPorDisciplina(disciplina: Disciplina): Promise<MatriculaDados[]>;
 }
 
 interface EstudanteGatewayInterface {

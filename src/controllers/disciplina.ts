@@ -13,8 +13,7 @@ export class DisciplinaController {
       disciplinaGateway
     ); // vai retornar Disciplina[]
 
-    const adapted =
-      DisciplinaAdapter.adaptJsonTodasDisciplinas(todasAsDisciplinas);
+    const adapted = DisciplinaAdapter.adaptJsonDisciplinas(todasAsDisciplinas);
     return adapted;
   }
 

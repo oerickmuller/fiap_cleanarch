@@ -6,8 +6,33 @@ import {
 } from "@gateways/matricula";
 import { DbConnection } from "@interfaces/dbconnection";
 import { MatriculaUseCases } from "@usecases";
+import { DisciplinaAdapter } from "@adapters";
 
 export class MatriculaController {
+  static async ObterDisciplinasPorEstudante(
+    estudanteId: number,
+    dbconnection: DbConnection
+  ): Promise<string> {
+    const matriculaGateway = new MatriculaGateway(dbconnection);
+    const estudanteGateway = new EstudanteGateway(dbconnection);
+    const disciplinaGateway = new DisciplinaGateway(dbconnection);
+    const disciplinas = await MatriculaUseCases.ObterDisciplinasPorEstudante(
+      estudanteId,
+      matriculaGateway,
+      estudanteGateway,
+      disciplinaGateway
+    );
+
+    return DisciplinaAdapter.adaptJsonDisciplinas(disciplinas);
+  }
+
+  static async ObterEstudantesPorDisciplina(
+    disciplinaId: number,
+    dbconnection: DbConnection
+  ): Promise<Estudante | null> {
+    return null;
+  }
+
   static async MatricularEstudanteEmDisciplina(
     estudanteId: number,
     disciplinaId: number,
@@ -27,7 +52,7 @@ export class MatriculaController {
 
     if (matricula !== null && matricula !== undefined) {
       // gravar no banco de dados!
-      await matriculaGateway.IncluirMatricula(matricula);
+      await matriculaGateway.Incluir(matricula);
     }
 
     // se chegou aqui, deu tudo certo.

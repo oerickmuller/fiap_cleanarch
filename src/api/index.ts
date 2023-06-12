@@ -95,7 +95,15 @@ export class FaculdadeApp {
     });
 
     // obter disciplinas de estudante
-    app.get("/matricula/estudante/:id");
+    app.get("/matricula/estudante/:id", async (req: Request, res: Response) => {
+      const estudanteId = parseInt(req.params.id);
+      const disciplinas =
+        await MatriculaController.ObterDisciplinasPorEstudante(
+          estudanteId,
+          this._dbconnection
+        );
+      res.send(disciplinas);
+    });
 
     // obter estudantes de disciplina
     app.get("/matricula/disciplina/:id");

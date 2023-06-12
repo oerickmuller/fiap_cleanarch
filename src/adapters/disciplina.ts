@@ -6,7 +6,7 @@ interface DisciplinaOut {
 }
 
 export const DisciplinaAdapter = {
-  adaptJsonTodasDisciplinas: function (dados: Disciplina[] | null): string {
+  adaptJsonDisciplinas: function (dados: Disciplina[] | null): string {
     if (dados === null) {
       return JSON.stringify({});
     }

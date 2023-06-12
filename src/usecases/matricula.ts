@@ -1,14 +1,40 @@
 import { Matricula } from "@entities/matricula";
-import { Estudante } from "@entities/estudante";
 import { Disciplina } from "@entities/disciplina";
-
+import { MatriculaDados } from "@types";
 import {
   DisciplinaGatewayInterface,
   EstudanteGatewayInterface,
   MatriculaGatewayInterface,
 } from "@interfaces/gateways";
+import { MatriculaGateway, EstudanteGateway } from "src/gateways";
 
 export class MatriculaUseCases {
+  static async ObterDisciplinasPorEstudante(
+    estudanteId: number,
+    matriculaGateway: MatriculaGateway,
+    estudanteGateway: EstudanteGateway,
+    disciplinaGateway: DisciplinaGatewayInterface
+  ): Promise<Disciplina[]> {
+    const estudante = await estudanteGateway.BuscarPorId(estudanteId);
+    if (estudante === null) return Promise.reject("Estudante nao encontrado");
+
+    const matriculasEstudante: MatriculaDados[] =
+      await matriculaGateway.BuscarPorEstudante(estudante);
+
+    if (matriculasEstudante === null || matriculasEstudante === undefined)
+      return [];
+
+    const disciplinasEstudante: Disciplina[] = [];
+    for (let i = 0; i < matriculasEstudante.length; i++) {
+      const disciplina = await disciplinaGateway.BuscarPorId(
+        matriculasEstudante[i].disciplinaId
+      );
+      if (disciplina !== null) disciplinasEstudante.push(disciplina);
+    }
+
+    return disciplinasEstudante;
+  }
+
   static async MatricularEstudanteEmDisciplina(
     estudanteId: number,
     disciplinaId: number,
