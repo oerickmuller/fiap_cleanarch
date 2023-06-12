@@ -1,5 +1,5 @@
 import { DbConnection } from "@interfaces/dbconnection";
-import { ParametroBusca } from "@types";
+import { ParametroBd } from "@types";
 import { open } from "sqlite";
 
 const sqlite3 = require("sqlite3").verbose();
@@ -20,7 +20,7 @@ export class SqliteConnection implements DbConnection {
     return await open({ filename: this._dsn, driver: sqlite3.Database });
   }
 
-  async BuscarTodasLinhas(
+  async BuscarTodas(
     nomeTabela: string,
     campos?: string[] | null
   ): Promise<any[]> {
@@ -35,10 +35,10 @@ export class SqliteConnection implements DbConnection {
     return rows;
   }
 
-  async BuscarLinhasPorParametros(
+  async BuscarPorParametros(
     nomeTabela: string,
     campos: string[] | null,
-    parametros: ParametroBusca[]
+    parametros: ParametroBd[]
   ): Promise<any> {
     const camposBusca = this.ajustarCamposExpressao(campos);
     const parametrosBusca = this.prepararParametrosBusca(parametros);
@@ -67,10 +67,7 @@ export class SqliteConnection implements DbConnection {
     return result.seq + 1;
   }
 
-  async InserirLinha(
-    nomeTabela: string,
-    parametros: ParametroBusca[]
-  ): Promise<boolean> {
+  async Inserir(nomeTabela: string, parametros: ParametroBd[]): Promise<void> {
     const nomesCampos: string[] = [];
     const nomesValores: string[] = [];
     const valores: Record<string, any> = {};
@@ -92,14 +89,12 @@ export class SqliteConnection implements DbConnection {
     const bancoDados = await this.openDatabase();
     const prepared = await bancoDados.prepare(sql, valores);
     prepared.run();
-
-    return true;
   }
 
   // auxiliares
 
   private prepararParametrosBusca(
-    params: ParametroBusca[] | null | undefined
+    params: ParametroBd[] | null | undefined
   ): parametros {
     if (params === null || params === undefined) {
       return {

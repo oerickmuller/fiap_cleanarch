@@ -73,31 +73,32 @@ export class FaculdadeApp {
       res.send(disciplinas);
     });
 
-    // app.post('/disciplina', (req, res) => {
-    //     /**
-    //      * Fornecendo um nome de disciplina, criar o disciplina
-    //      * se ainda não existir um com esse nome;
-    //      */
-    // })
+    app.post("/matricula", async (req: Request, res: Response) => {
+      // registrar um estudante em uma disciplina
+      const estudanteId: number = parseInt(req.body.estudante);
+      const disciplinaId: number = parseInt(req.body.disciplina);
 
-    // app.get('/estudante/:nome/disciplinas', (req, res) => {
-    //     /**
-    //      * passando um nome de estudante, listar as disciplinas
-    //      * em que está matriculado.
-    //      */
-    //     // const estudante = req.params.nome;
-    //     // const disciplinasEstudante = MatriculaController.ObterDisciplinasEstudante(new Estudante(estudante));
-    //     // res.send(JSON.stringify(estudante));
-    // })
+      await MatriculaController.MatricularEstudanteEmDisciplina(
+        estudanteId,
+        disciplinaId,
+        this._dbconnection
+      )
+        .then(() => {
+          res.status(201).send({
+            success: true,
+            message: "Matricula efetuada com sucesso.",
+          });
+        })
+        .catch((err) => {
+          res.status(400).send({ success: false, message: err });
+        });
+    });
 
-    // app.get('/disciplina/:nome/estudantes', (req, res) => {
-    //     /**
-    //      * Dado o nome de uma disciplina, listar os estudantes.
-    //      */
-    //     // const disciplina = req.params.disciplina;
-    //     // const estudantesDisciplina = MatriculaController.ObterEstudantesDisciplina(new Disciplina(disciplina));
-    //     // res.send(JSON.stringify(disciplina));
-    // })
+    // obter disciplinas de estudante
+    app.get("/matricula/estudante/:id");
+
+    // obter estudantes de disciplina
+    app.get("/matricula/disciplina/:id");
 
     app.listen(port, () => {
       console.log(`Faculdade app listening on port ${port}`);

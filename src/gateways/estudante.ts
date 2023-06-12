@@ -1,7 +1,7 @@
 import { Estudante } from "@entities";
 import { DbConnection } from "@interfaces/dbconnection";
 import { EstudanteGatewayInterface } from "@interfaces/gateways";
-import { ParametroBusca } from "@types";
+import { ParametroBd } from "@types";
 
 export class EstudanteGateway implements EstudanteGatewayInterface {
   private repositorioDados: DbConnection;
@@ -11,8 +11,22 @@ export class EstudanteGateway implements EstudanteGatewayInterface {
     this.repositorioDados = database;
   }
 
-  async BuscarEstudantePorNome(nome: string): Promise<Estudante | null> {
-    const retornoBD = await this.repositorioDados.BuscarLinhasPorParametros(
+  async BuscarPorId(id: number): Promise<Estudante | null> {
+    const retornoBd = await this.repositorioDados.BuscarPorParametros(
+      this.nomeTabela,
+      null,
+      [{ campo: "estudante_id", valor: id }]
+    );
+
+    if (retornoBd === null || retornoBd === undefined) return null;
+    if (retornoBd.length < 1) return null;
+
+    const linhaRetorno = retornoBd[0];
+    return new Estudante(linhaRetorno.estudante_id, linhaRetorno.nome);
+  }
+
+  async BuscarPorNome(nome: string): Promise<Estudante | null> {
+    const retornoBD = await this.repositorioDados.BuscarPorParametros(
       this.nomeTabela,
       null,
       [{ campo: "nome", valor: nome }]
@@ -35,8 +49,8 @@ export class EstudanteGateway implements EstudanteGatewayInterface {
     return estudante;
   }
 
-  async BuscarTodosEstudantes(): Promise<Estudante[] | null> {
-    const result = await this.repositorioDados.BuscarTodasLinhas(
+  async BuscarTodos(): Promise<Estudante[] | null> {
+    const result = await this.repositorioDados.BuscarTodas(
       this.nomeTabela,
       null
     );
@@ -52,17 +66,16 @@ export class EstudanteGateway implements EstudanteGatewayInterface {
     }
   }
 
-  async IncluirEstudante(estudante: Estudante): Promise<boolean> {
+  async Incluir(estudante: Estudante): Promise<void> {
     const novoId = await this.repositorioDados.ObterUltimoId(this.nomeTabela);
 
-    const parametros: ParametroBusca[] = [];
+    const parametros: ParametroBd[] = [];
     parametros.push({ campo: "estudante_id", valor: novoId });
     parametros.push({ campo: "nome", valor: estudante.nome });
 
-    const sucesso = await this.repositorioDados.InserirLinha(
+    const sucesso = await this.repositorioDados.Inserir(
       this.nomeTabela,
       parametros
     );
-    return sucesso;
   }
 }

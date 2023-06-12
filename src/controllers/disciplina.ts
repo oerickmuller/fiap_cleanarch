@@ -1,4 +1,5 @@
 import { DisciplinaGateway } from "@gateways/disciplina";
+import { EstudanteGateway } from "@gateways/disciplina";
 import { DbConnection } from "@interfaces/dbconnection";
 import { DisciplinaUseCases } from "@usecases";
 import { DisciplinaAdapter } from "../adapters/disciplina";
@@ -29,4 +30,10 @@ export class DisciplinaController {
       return Promise.reject(err);
     });
   }
+
+  static async MatricularEstudante(
+    disciplinaId: number,
+    estudanteId: number,
+    dbconnection: DbConnection
+  ) {}
 }

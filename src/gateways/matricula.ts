@@ -1,37 +1,39 @@
 import { Estudante, Matricula, Disciplina } from "@entities";
 import { DbConnection } from "@interfaces/dbconnection";
 import { MatriculaGatewayInterface } from "@interfaces/gateways";
+import { ParametroBd } from "@types";
 
 export class MatriculaGateway implements MatriculaGatewayInterface {
   private connection: DbConnection;
-  private tableName = "matricula";
+  private nomeTabela = "matriculas";
 
   constructor(database: DbConnection) {
     this.connection = database;
   }
-  BuscarMatricula(
+  public async Buscar(
     estudante: Estudante,
     disciplina: Disciplina
-  ): Matricula | null {
-    // const result = this.connection.RunSelectQuery(
-    //     this.tableName,
-    //     null,
-    //     [{
-    //         field: 'estudante', value: estudante.nome,
-    //     }, {
-    //         field: 'disciplina', value: disciplina.nome
-    //     }]
-    // );
-    // if (result !== null) {
-    //     return new Matricula(
-    //         new Estudante(result[0].estudante),
-    //         new Disciplina(result[0].disciplina)
-    //     );
-    // }
-    return null;
+  ): Promise<Matricula | null> {
+    const resultado = await this.connection.BuscarPorParametros(
+      this.nomeTabela,
+      null,
+      [
+        { campo: "disciplina_id", valor: disciplina.id },
+        { campo: "estudante_id", valor: estudante.id },
+      ]
+    );
+
+    if (resultado === null || resultado === undefined) return null;
+    if (resultado.length < 1) return null;
+
+    return new Matricula(estudante, disciplina);
   }
-  IncluirMatricula(estudante: Estudante, disciplina: Disciplina): boolean {
-    /** .. */
-    return true;
+
+  public async IncluirMatricula(matricula: Matricula): Promise<void> {
+    const parametros: ParametroBd[] = [];
+    parametros.push({ campo: "disciplina_id", valor: matricula.disciplina.id });
+    parametros.push({ campo: "estudante_id", valor: matricula.estudante.id });
+
+    await this.connection.Inserir(this.nomeTabela, parametros);
   }
 }

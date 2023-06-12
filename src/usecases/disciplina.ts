@@ -7,8 +7,7 @@ export class DisciplinaUseCases {
   static async ObterTodasDisciplinas(
     disciplinasGateway: DisciplinaGatewayInterface
   ): Promise<Disciplina[] | null> {
-    const todasAsDisciplinas =
-      await disciplinasGateway.BuscarTodasDisciplinas();
+    const todasAsDisciplinas = await disciplinasGateway.BuscarTodas();
     return todasAsDisciplinas;
   }
 
@@ -16,12 +15,12 @@ export class DisciplinaUseCases {
     nome: string,
     disciplinasGateway: DisciplinaGatewayInterface
   ) {
-    const disciplina = await disciplinasGateway.BuscarDisciplinaPorNome(nome);
+    const disciplina = await disciplinasGateway.BuscarPorNome(nome);
 
     if (disciplina !== null) return Promise.reject("Disciplina já existente");
 
     const novaDisciplina = new Disciplina(-1, nome);
-    disciplinasGateway.IncluirDisciplina(novaDisciplina);
+    disciplinasGateway.Incluir(novaDisciplina);
     return true;
   }
 }

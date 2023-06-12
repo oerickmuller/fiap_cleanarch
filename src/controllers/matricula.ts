@@ -1,28 +1,35 @@
 import { Disciplina, Estudante } from "@entities";
-import { MatriculaGateway } from "@gateways/matricula";
-
+import {
+  DisciplinaGateway,
+  EstudanteGateway,
+  MatriculaGateway,
+} from "@gateways/matricula";
 import { DbConnection } from "@interfaces/dbconnection";
 import { MatriculaUseCases } from "@usecases";
 
 export class MatriculaController {
-  static ObterEstudantesDisciplina(disciplina: Disciplina) {
-    throw new Error("Method not implemented.");
-  }
-  static ObterDisciplinasEstudante(estudante: Estudante) {
-    throw new Error("Method not implemented.");
-  }
-  static MatricularEstudante(
-    estudante: Estudante,
-    disciplina: Disciplina,
+  static async MatricularEstudanteEmDisciplina(
+    estudanteId: number,
+    disciplinaId: number,
     dbconnection: DbConnection
-  ) {
-    const gateway = new MatriculaGateway(dbconnection);
-    const matricula = MatriculaUseCases.MatricularEstudanteEmDisciplina(
-      estudante,
-      disciplina,
-      gateway
+  ): Promise<void> {
+    const matriculaGateway = new MatriculaGateway(dbconnection);
+    const estudanteGateway = new EstudanteGateway(dbconnection);
+    const disciplinaGateway = new DisciplinaGateway(dbconnection);
+
+    const matricula = await MatriculaUseCases.MatricularEstudanteEmDisciplina(
+      estudanteId,
+      disciplinaId,
+      matriculaGateway,
+      estudanteGateway,
+      disciplinaGateway
     );
-    gateway.IncluirMatricula(estudante, disciplina);
-    return true;
+
+    if (matricula !== null && matricula !== undefined) {
+      // gravar no banco de dados!
+      await matriculaGateway.IncluirMatricula(matricula);
+    }
+
+    // se chegou aqui, deu tudo certo.
   }
 }

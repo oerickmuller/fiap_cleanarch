@@ -1,7 +1,7 @@
 import { Disciplina } from "@entities/disciplina";
 import { DbConnection } from "@interfaces/dbconnection";
 import { DisciplinaGatewayInterface } from "@interfaces/gateways";
-import { ParametroBusca } from "@types";
+import { ParametroBd } from "@types";
 
 export class DisciplinaGateway implements DisciplinaGatewayInterface {
   private repositorioDados: DbConnection;
@@ -11,10 +11,21 @@ export class DisciplinaGateway implements DisciplinaGatewayInterface {
     this.repositorioDados = conexao;
   }
 
-  public async BuscarDisciplinaPorNome(
-    nome: string
-  ): Promise<Disciplina | null> {
-    const retornoBD = await this.repositorioDados.BuscarLinhasPorParametros(
+  public async BuscarPorId(id: number): Promise<Disciplina | null> {
+    const retornoBd = await this.repositorioDados.BuscarPorParametros(
+      this.nomeTabela,
+      null,
+      [{ campo: "disciplina_id", valor: id }]
+    );
+    if (retornoBd === null || retornoBd === undefined) return null;
+    if (retornoBd.length < 1) return null;
+
+    const row = retornoBd[0];
+    return new Disciplina(row.disciplina_id, row.nome);
+  }
+
+  public async BuscarPorNome(nome: string): Promise<Disciplina | null> {
+    const retornoBD = await this.repositorioDados.BuscarPorParametros(
       this.nomeTabela,
       null,
       [{ campo: "nome", valor: nome }]
@@ -37,8 +48,8 @@ export class DisciplinaGateway implements DisciplinaGatewayInterface {
     return disciplina;
   }
 
-  public async BuscarTodasDisciplinas(): Promise<Disciplina[] | null> {
-    const result = await this.repositorioDados.BuscarTodasLinhas(
+  public async BuscarTodas(): Promise<Disciplina[] | null> {
+    const result = await this.repositorioDados.BuscarTodas(
       this.nomeTabela,
       null
     );
@@ -54,14 +65,14 @@ export class DisciplinaGateway implements DisciplinaGatewayInterface {
     }
   }
 
-  public async IncluirDisciplina(disciplina: Disciplina): Promise<void> {
+  public async Incluir(disciplina: Disciplina): Promise<void> {
     const novoId = await this.repositorioDados.ObterUltimoId(this.nomeTabela);
 
-    const parametros: ParametroBusca[] = [];
+    const parametros: ParametroBd[] = [];
     parametros.push({ campo: "disciplina_id", valor: novoId });
     parametros.push({ campo: "nome", valor: disciplina.nome });
 
-    const sucesso = await this.repositorioDados.InserirLinha(
+    const sucesso = await this.repositorioDados.Inserir(
       this.nomeTabela,
       parametros
     );

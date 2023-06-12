@@ -3,23 +3,25 @@ import { Estudante } from "@entities/estudante";
 import { Matricula } from "@entities/matricula";
 
 interface DisciplinaGatewayInterface {
-  BuscarDisciplinaPorNome(nome: string): Promise<Disciplina | null>;
-  BuscarTodasDisciplinas(): Promise<Disciplina[] | null>;
-  IncluirDisciplina(disciplina: Disciplina): Promise<void>;
+  BuscarPorId(id: number): Promise<Disciplina | null>;
+  BuscarPorNome(nome: string): Promise<Disciplina | null>;
+  BuscarTodas(): Promise<Disciplina[] | null>;
+  Incluir(disciplina: Disciplina): Promise<void>;
 }
 
 interface MatriculaGatewayInterface {
-  BuscarMatricula(
+  Buscar(
     estudante: Estudante,
     disciplina: Disciplina
-  ): Matricula | null;
-  IncluirMatricula(estudante: Estudante, disciplina: Disciplina): boolean;
+  ): Promise<Matricula | null>;
+  IncluirMatricula(matricula: Matricula): Promise<void>;
 }
 
 interface EstudanteGatewayInterface {
-  BuscarEstudantePorNome(nome: string): Promise<Estudante | null>;
-  BuscarTodosEstudantes(): Promise<Estudante[] | null>;
-  IncluirEstudante(estudante: Estudante): Promise<boolean>;
+  BuscarPorNome(nome: string): Promise<Estudante | null>;
+  BuscarPorId(id: number): Promise<Estudante | null>;
+  BuscarTodos(): Promise<Estudante[] | null>;
+  Incluir(estudante: Estudante): Promise<void>;
 }
 
 export {

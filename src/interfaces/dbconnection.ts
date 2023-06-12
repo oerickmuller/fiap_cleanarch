@@ -1,21 +1,15 @@
-import { ParametroBusca } from "@types";
+import { ParametroBd } from "@types";
 
 export interface DbConnection {
-  BuscarLinhasPorParametros(
+  BuscarPorParametros(
     nomeTabela: string,
     campos: string[] | null,
-    parametros: ParametroBusca[]
+    parametros: ParametroBd[]
   ): Promise<any>;
 
-  BuscarTodasLinhas(
-    nomeTabela: string, 
-    campos?: string[] | null
-  ): Promise<any[]>;
+  BuscarTodas(nomeTabela: string, campos?: string[] | null): Promise<any[]>;
 
-  InserirLinha(
-    nomeTabela: string, 
-    parametros: ParametroBusca[]
-  ): Promise<boolean>;
+  Inserir(nomeTabela: string, parametros: ParametroBd[]): Promise<void>;
 
   ObterUltimoId(nomeTabela: string): Promise<number>;
 }
