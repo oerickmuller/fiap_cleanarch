@@ -6,7 +6,7 @@ import {
 } from "@gateways/matricula";
 import { DbConnection } from "@interfaces/dbconnection";
 import { MatriculaUseCases } from "@usecases";
-import { DisciplinaAdapter } from "@adapters";
+import { DisciplinaAdapter, EstudanteAdapter } from "@adapters";
 
 export class MatriculaController {
   static async ObterDisciplinasPorEstudante(
@@ -29,8 +29,18 @@ export class MatriculaController {
   static async ObterEstudantesPorDisciplina(
     disciplinaId: number,
     dbconnection: DbConnection
-  ): Promise<Estudante | null> {
-    return null;
+  ): Promise<string> {
+    const matriculaGateway = new MatriculaGateway(dbconnection);
+    const estudanteGateway = new EstudanteGateway(dbconnection);
+    const disciplinaGateway = new DisciplinaGateway(dbconnection);
+    const estudantes = await MatriculaUseCases.ObterEstudantesPorDisciplina(
+      disciplinaId,
+      matriculaGateway,
+      estudanteGateway,
+      disciplinaGateway
+    );
+
+    return EstudanteAdapter.adaptJsonEstudantes(estudantes);
   }
 
   static async MatricularEstudanteEmDisciplina(

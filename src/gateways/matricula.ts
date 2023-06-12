@@ -65,7 +65,25 @@ class MatriculaGateway implements MatriculaGatewayInterface {
   public async BuscarPorDisciplina(
     disciplina: Disciplina
   ): Promise<MatriculaDados[]> {
-    return [];
+    const parametros: ParametroBd[] = [
+      { campo: "disciplina_id", valor: disciplina.id },
+    ];
+    const listaMatriculasBd = await this.connection.BuscarPorParametros(
+      this.nomeTabela,
+      null,
+      parametros
+    );
+    if (listaMatriculasBd.length < 1) return [];
+
+    const listaMatriculas: MatriculaDados[] = [];
+    for (let p = 0; p < listaMatriculasBd.length; p++) {
+      listaMatriculas.push({
+        estudanteId: listaMatriculasBd[p].estudante_id,
+        disciplinaId: disciplina.id,
+      });
+    }
+
+    return listaMatriculas;
   }
 }
 

@@ -106,7 +106,18 @@ export class FaculdadeApp {
     });
 
     // obter estudantes de disciplina
-    app.get("/matricula/disciplina/:id");
+    app.get(
+      "/matricula/disciplina/:id",
+      async (req: Request, res: Response) => {
+        const disciplinaId = parseInt(req.params.id);
+        const estudantes =
+          await MatriculaController.ObterEstudantesPorDisciplina(
+            disciplinaId,
+            this._dbconnection
+          );
+        res.send(estudantes);
+      }
+    );
 
     app.listen(port, () => {
       console.log(`Faculdade app listening on port ${port}`);

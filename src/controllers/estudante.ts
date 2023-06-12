@@ -12,8 +12,7 @@ export class EstudanteController {
       estudantesGateway
     );
 
-    const adapted =
-      EstudanteAdapter.adaptJsonTodosEstudantes(todosOsEstudantes);
+    const adapted = EstudanteAdapter.adaptJsonEstudantes(todosOsEstudantes);
     return adapted;
   }
 

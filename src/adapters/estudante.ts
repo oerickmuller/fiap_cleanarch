@@ -6,7 +6,7 @@ interface EstudanteOut {
 }
 
 export const EstudanteAdapter = {
-  adaptJsonTodosEstudantes: function (dados: Estudante[] | null): string {
+  adaptJsonEstudantes: function (dados: Estudante[] | null): string {
     if (dados === null) {
       return JSON.stringify({});
     }
